@@ -16,7 +16,7 @@ class Table:
             return True
         return False
 
-class Order:
+class Book:
     def __init__(self, table, time):
         self.table = table
         self.time = time
@@ -24,6 +24,11 @@ class Order:
 
     def add_item(self, menu_item):
         self.items.append(menu_item)
+        
+class OrderItem:
+    def __init__(self, menu_item, quantity):
+        self.menu_item = menu_item
+        self.quantity = quantity
 
 class Restaurant:
     def __init__(self, name):
@@ -48,7 +53,7 @@ class Restaurant:
     def book_table(self, table_number, time):
         for table in self.tables:
             if table.table_number == table_number and table.book() == True:
-                order = Order(table, time)
+                order = Book(table, time)
                 self.orders.append(order)
                 return order
         return None

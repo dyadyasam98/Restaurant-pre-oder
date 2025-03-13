@@ -1,4 +1,4 @@
-from main_entities import Restaurant, Table, Order, Menu
+from main_entities import Restaurant, Table, Book, Menu, OrderItem
 restaurant = Restaurant("Ресторан 1")
 restaurant.add_table(Table(1, 2, False))
 restaurant.add_table(Table(2, 4, False))
@@ -42,7 +42,7 @@ if order:
                 break
         # Если нашли блюдо
         if user_dish:
-            selected_items.append(user_dish)
+            selected_items.append(OrderItem(user_dish, dish_quantity))
         # Если не нашли
         else:
             print("Такого блюда нет в меню!")
