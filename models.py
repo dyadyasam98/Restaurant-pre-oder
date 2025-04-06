@@ -1,3 +1,4 @@
+from datetime import datetime, date, time
 class Menu:
     def __init__(self, item_id, name, price, description, avaliable):
         self.item_id = item_id
@@ -42,6 +43,7 @@ class Order:
         self.tel_number = tel_number
         self.customer_name = customer_name
         self.items = []
+        self.created_add = datetime.now()
     def add_item(self, item_to_add, add_quantity = 1):
         for item in self.items:
             if item.menu_item.item_id == item_to_add.item_id:
@@ -99,11 +101,23 @@ class Restaurant:
             if i.item_id == menu_item.item_id:
                 raise ValueError (f'Блюдо с ID {menu_item.item_id} уже существет ({i.name}).')
         self.menu.append(menu_item)
-
+    
+    def get_dish_by_id(self, id):
+        for d in self.menu:
+            if d.item_id == id:
+                return d
+        return None
+    
+    def get_dish_by_name(self, name):
+        for d in self.menu:
+            if d.name.lower() == name:
+                return d
+        return None
+    
     def get_available_tables(self):
         return [table for table in self.tables if table.is_booked == False]
 
-    def get_table_with_number(self, number):
+    def get_table_by_number(self, number):
         for t in self.tables:
             if t.table_number == number:
                 return t
@@ -121,16 +135,16 @@ class Restaurant:
                 return d
         return None
 
-    def book_table(self, user_name, user_number, n_table):
-        table_to_book = self.get_table_with_number(n_table)
+    def book_table(self, user_name, user_number, n_table, time):
+        table_to_book = self.get_table_by_number(n_table)
         if not table_to_book or not table_to_book.book():
             return None
-        new_order = Order(table_to_book, 0, user_number, user_name)
+        new_order = Order(table_to_book, time, user_number, user_name)
         self.orders.append(new_order)
         return new_order
 
     def release(self, n_table):
-        table_to_release = self.get_table_with_number()
+        table_to_release = self.get_table_by_number()
         if table_to_release:
             table_to_release.release()
         return False
@@ -146,3 +160,17 @@ class Restaurant:
                     order.items.append(item)
                 return order
         return None
+    
+    def get_order_by_table(self, id):
+        for order in self.orders:
+            if order.table.table_number == id:
+                return order
+        return None
+
+    def add_menu_item(self, dish):
+        for d in self.menu:
+            if d.item_id == dish.item_id:
+                raise ValueError(f"Блюдо с ID {d.item_id} уже существует в меню")
+        self.menu.append(dish)
+      
+
